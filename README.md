@@ -1,182 +1,177 @@
+Week 13 Team Challenge – Knowledge Base Demo (Python Quality)
+Overview
 
-# Week 13 Team Challenge – Knowledge Base Demo (Python Quality)
+This repository is a working demonstration of the Week 13 Team Challenge.
 
-## What This Repository Is
+It showcases how a team can build and use a retrieval-augmented knowledge base (RAG) to centralize Python quality standards across an organization.
 
-This repository is a **working demonstration** of the Week 13 Team Challenge.
+All core infrastructure has already been implemented, tested locally, and validated through GitHub Actions. The remaining team work focuses on content, standards, and collaboration, not debugging infrastructure.
 
-The full RAG pipeline, document ingestion, chunking, embeddings, retrieval logic, tests, and GitHub Actions workflows have already been implemented by **Team Member 1** and verified to run:
+What This Demo Represents
 
-* Locally
-* In CI (GitHub Actions)
-* Without AWS credentials for tests (via mocking)
+In many real-world organizations, Python quality issues don’t come from lack of skill, but from inconsistent standards:
 
-In other words, this repo is not speculative.
-It runs. It passes. It does what the challenge describes.
+Different naming conventions across teams
 
-The remaining team work focuses on **content, standards, and collaboration**, not infrastructure debugging.
+Unclear expectations around structure and organization
 
----
+Tribal knowledge instead of documented guidance
 
-## Why This Demo Exists
+New engineers guessing instead of referencing standards
 
-The challenge scenario describes a common real-world problem:
+This project demonstrates how those problems can be addressed by:
 
-> Organizations struggle to maintain consistent Python quality, standards, and shared understanding across teams.
+Encoding Python standards as team-authored documents
 
-This project demonstrates how a team can:
+Indexing them into a shared knowledge base
 
-* Centralize Python quality standards
-* Encode them as searchable documents
-* Retrieve them reliably using a RAG system
-* Enforce contribution discipline with CI and review
+Making them queryable through a RAG system
 
-The **knowledge base itself** represents organizational standards.
-The **code** represents how those standards are made accessible and enforceable.
+Enforcing consistency through CI and review
 
----
+Each document in the knowledge_base/ directory represents an agreed-upon organizational standard.
 
-## Important Context About the Original Challenge Instructions
+Knowledge Base Scope: Python Quality
 
-A quick heads-up for contributors:
+The shared knowledge base focuses on Python quality across an organization.
 
-The original challenge description provides **conceptual guidance**, but some of the example snippets and dependency assumptions would not run cleanly without adjustment.
+The documents are organized around eight common problem areas that show up repeatedly in enterprise Python codebases.
 
-This repository intentionally:
+The 8 Python Quality Areas
 
-* Uses up-to-date LangChain package splits (`langchain-core`, `langchain-community`, etc.)
-* Avoids deprecated imports
-* Explicitly configures CI so tests pass in a clean environment
-* Ensures `src/` is importable in both local and GitHub Actions contexts
+Naming conventions
 
-You do **not** need to resolve those issues yourself.
-They’ve already been handled here so the team can focus on the actual goal of the challenge.
+Code organization and structure
 
----
+Commenting and docstrings
 
-## What the Knowledge Base Is About
+Readability and simplicity
 
-The shared knowledge base focuses on **Python quality across an organization**.
+Error handling and defensive coding
 
-Each document defines expectations, patterns, and guardrails that help teams write Python that is:
+Testing expectations
 
-* Consistent
-* Readable
-* Reviewable
-* Maintainable
+Dependency and environment management
 
-### The 8 Core Python Quality Areas
+Code review and consistency standards
 
-The knowledge base is organized around these topics:
+Each team member contributes two documents, for a total of eight documents covering these areas.
 
-1. Naming conventions
-2. Code organization and structure
-3. Commenting and docstrings
-4. Readability and simplicity
-5. Error handling and defensive coding
-6. Testing expectations
-7. Dependency management
-8. Code review and consistency standards
-
-Each team member contributes **two documents** covering these areas.
-
----
-
-## How This Repo Is Structured
-
-```text
+Repository Structure
 team-knowledge-base/
-├── knowledge_base/        # Team-authored documents live here
-├── src/                   # RAG + ingestion infrastructure (already implemented)
-├── tests/                 # Automated tests (already implemented)
-├── .github/workflows/     # CI validation
-├── TEAM.md                # Who owns what
+├── knowledge_base/        # Team-authored standards and guidance
+├── src/                   # RAG, ingestion, retrieval infrastructure
+├── tests/                 # Unit and integration tests
+├── .github/workflows/     # CI validation (lint + tests)
+├── TEAM.md                # Team roles and document ownership
 └── README.md
-```
 
-For contributors, **`knowledge_base/` is where you work**.
 
----
+For contributors:
+knowledge_base/ is where you work.
+The infrastructure already exists to ingest and serve your documents.
 
-## What’s Already Done (So You Don’t Duplicate Effort)
+What’s Already Implemented
 
-Team Member 1 has already completed:
+All of the following have already been completed and validated:
 
-* Document loader and metadata parsing
-* Chunking pipeline
-* Embeddings and vector store integration
-* RAG query pipeline with source attribution
-* Unit and integration tests
-* GitHub Actions CI (lint + test)
-* Dependency alignment and compatibility fixes
+Document loading and metadata parsing
 
-You don’t need to reimplement or modify these pieces for this demo.
+Chunking and preprocessing
 
----
+Embeddings and vector store integration
 
-## Contributor Workflow (High Level)
+Retrieval-augmented generation with source attribution
 
-As a contributor (Team Member 2–4), your responsibility is to:
+Unit and integration tests
 
-1. Clone the repository
-2. Pick or assign yourself an issue
-3. Write **two structured documents** in `knowledge_base/`
-4. Commit via a feature branch
-5. Open a pull request
-6. Review at least one other contributor’s PR
+GitHub Actions CI (lint + test)
 
-The system will automatically:
+Dependency alignment for current LangChain packages
 
-* Validate nothing broke
-* Enforce consistency via CI
-* Make your documents searchable once merged
+This repository runs successfully locally and in CI.
 
----
+You do not need to modify the infrastructure to participate.
 
-## Why This Mirrors Real Enterprise Work
+How to Interact With the Knowledge Base
 
-This setup intentionally mirrors how real teams operate:
+There’s no need to modify the infrastructure or underlying code to use this project.
 
-* Infrastructure is built once and stabilized
-* Content evolves continuously
-* CI protects shared standards
-* Humans review meaning, not syntax
-* Knowledge becomes queryable instead of tribal
+All core components — loading, chunking, embeddings, vector storage, retrieval, and generation — are already implemented, tested locally, and validated through GitHub Actions.
 
-The goal isn’t just to “pass the challenge.”
-It’s to show how teams actually scale quality.
+The fastest and intended way to interact with the application is to run the provided demo script.
 
----
+Quick Start (Local)
 
-## TEAM.md Summary
+From the project root:
 
-See `TEAM.md` for:
+python demo.py
 
-* Team member roles
-* Document ownership
-* Contribution expectations
-* Review rules
 
----
+This will:
 
-## Final Note
+Load all documents from the knowledge_base/ directory
 
-If you’re reviewing this as part of the challenge:
+Chunk and process the documents
 
-* Yes, this exceeds the minimum requirements
-* That’s intentional
-* The objective is to demonstrate **clarity, correctness, and collaboration**, not just completion
+Build the vector index
 
-If you’re contributing:
+Start an interactive prompt where you can ask questions
 
-* Focus on writing clear, useful guidance
-* Assume other engineers will rely on your document
-* Write like it matters, because it does
+Once the system is ready, you’ll see:
 
----
+Knowledge base ready. Ask a question (Ctrl+C to exit).
 
-If you want next, I can:
+Example Questions
 
-* Tighten this further for an instructor audience
-* Write one or two **full example knowledge base documents**
-* Add a short **“how to demo this live”** section for walkthroughs
+You can ask natural-language questions such as:
+
+What are Python naming conventions?
+
+How should Python code be organized in this organization?
+
+What the System Returns
+
+For each question, the system returns:
+
+A generated answer based only on the indexed documents
+
+A list of source documents used to produce that answer
+
+This keeps responses grounded in documented standards, not assumptions or hallucinations.
+
+Adding or Updating Standards
+
+For this challenge and demo:
+
+The Python code is already complete
+
+CI is already configured and passing
+
+No infrastructure changes are required
+
+If you’re adding new standards or guidance:
+
+Add new documents to the knowledge_base/ directory
+
+Follow the required metadata format
+
+Commit via a feature branch and open a PR
+
+Re-running demo.py is enough to pick up new documents and make them queryable.
+
+Contributor Expectations (Summary)
+
+As a contributor (Team Member 2–4), you are expected to:
+
+Write two structured documents
+
+Follow the metadata header format
+
+Submit changes via a feature branch and PR
+
+Review at least one other contributor’s PR
+
+CI will automatically validate that nothing breaks.
+
+See TEAM.md for exact roles and assignments.

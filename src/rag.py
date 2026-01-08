@@ -1,22 +1,21 @@
 from typing import List, Dict, Any
 
+import boto3
+from langchain_aws import ChatBedrock
 from langchain_core.documents import Document
 from langchain_core.prompts import PromptTemplate
-from langchain_aws import ChatBedrock
-
-import boto3
 
 from src.loader import load_knowledge_base, create_chunks
 from src.vectorstore import (
     create_embeddings,
     create_vector_store,
-    search
+    search,
 )
 
 
 class TeamKnowledgeBase:
     """
-    Retrieval-Augmented Generation system for team knowledge.
+    Retrieval-Augmented Generation (RAG) system for team knowledge.
     """
 
     def __init__(self, region: str = "us-east-1"):
@@ -29,8 +28,8 @@ class TeamKnowledgeBase:
             client=boto3.client("bedrock-runtime", region_name=region),
             model_kwargs={
                 "temperature": 0.2,
-                "max_tokens_to_sample": 800
-            }
+                "max_tokens_to_sample": 800,
+            },
         )
 
         self.prompt = PromptTemplate(
@@ -40,7 +39,7 @@ class TeamKnowledgeBase:
                 "Context:\n{context}\n\n"
                 "Question: {question}\n\n"
                 "Answer:"
-            )
+            ),
         )
 
     def load(self, directory: str = "knowledge_base") -> int:
@@ -53,7 +52,7 @@ class TeamKnowledgeBase:
         self.chunks = create_chunks(
             self.documents,
             chunk_size=chunk_size,
-            chunk_overlap=overlap
+            chunk_overlap=overlap,
         )
         return len(self.chunks)
 
@@ -68,7 +67,7 @@ class TeamKnowledgeBase:
         if not self.vectorstore:
             return {
                 "answer": "Knowledge base is not initialized.",
-                "sources": []
+                "sources": [],
             }
 
         results = search(self.vectorstore, question, k=k)
@@ -76,29 +75,41 @@ class TeamKnowledgeBase:
         if not results:
             return {
                 "answer": "No relevant information found in the knowledge base.",
-                "sources": []
+                "sources": [],
             }
 
         context = "\n\n".join(doc.page_content for doc in results)
 
         prompt_text = self.prompt.format(
             context=context,
-            question=question
+            question=question,
         )
 
         response = self.llm.invoke(prompt_text)
 
-        sources = [
-            {
-                "file": doc.metadata.get("source", "Unknown"),
-                "author": doc.metadata.get("author", "Unknown"),
-                "topic": doc.metadata.get("topic", "Unknown"),
-            }
-            for doc in results
-        ]
+        # De-duplicate sources
+        seen = set()
+        sources = []
+
+        for doc in results:
+            key = (
+                doc.metadata.get("source"),
+                doc.metadata.get("author"),
+                doc.metadata.get("topic"),
+            )
+
+            if key not in seen:
+                seen.add(key)
+                sources.append(
+                    {
+                        "file": doc.metadata.get("source", "Unknown"),
+                        "author": doc.metadata.get("author", "Unknown"),
+                        "topic": doc.metadata.get("topic", "Unknown"),
+                    }
+                )
 
         return {
             "question": question,
             "answer": response.content,
-            "sources": sources
+            "sources": sources,
         }
