@@ -1,0 +1,20 @@
+---
+Author: Kevin Garrett
+Date: 2026-01-07
+Topic: Python Naming Conventions
+Summary: Organization-wide standards for naming Python variables, functions, classes, files, and modules to improve readability, maintainability, and consistency.
+---
+
+Consistent naming conventions are one of the most effective ways to improve Python code quality across an organization. Poor or inconsistent naming increases cognitive load, slows onboarding, and introduces unnecessary ambiguity when maintaining or reviewing code. This document defines the standard naming rules expected across all Python projects within the organization.
+
+Variables and functions must use lowercase snake_case. Names should be descriptive, concise, and reflect intent rather than implementation. For example, `calculate_total_cost` is preferred over `calc_tc`, and `user_id` is preferred over `uid`. Single-letter variables are only acceptable in very limited scopes such as simple loops or comprehensions.
+
+Constants must be written in ALL_CAPS using underscores to separate words. Constants should be defined at the top of modules or in dedicated configuration files. Examples include `MAX_RETRY_COUNT`, `DEFAULT_TIMEOUT_SECONDS`, and `API_BASE_URL`.
+
+Classes must use PascalCase and represent nouns rather than actions. Class names should describe what the object represents, not what it does. For example, `OrderProcessor` is acceptable, but `ProcessOrders` is not. Abstract base classes should clearly indicate their role using suffixes such as `Base`, `Abstract`, or `Interface` when appropriate.
+
+Modules and package names must be lowercase and short. Underscores are allowed but should be used sparingly. File names should not include implementation details or version numbers. For example, `data_loader.py` is acceptable, while `data_loader_v2_final.py` is not.
+
+Test files must mirror the structure of the source code they test and use the `test_*.py` naming pattern. Test function names should describe behavior and expected outcomes clearly, such as `test_loader_parses_metadata_correctly`.
+
+Avoid abbreviations unless they are widely accepted and unambiguous within the domain. Consistency across teams is more important than personal preference. All new code and refactors are expected to conform to these standards, and CI linting will enforce violations where applicable.

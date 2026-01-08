@@ -1,0 +1,22 @@
+---
+Author: Kevin Garrett
+Date: 2026-01-07
+Topic: Python Code Organization and Structure
+Summary: Best practices for organizing Python projects to ensure scalability, testability, and long-term maintainability.
+---
+
+Well-structured Python codebases scale more effectively and reduce long-term maintenance costs. This document outlines organizational standards for Python projects used across the organization, with an emphasis on clarity, separation of concerns, and testability.
+
+All Python projects must follow a clear directory structure. Application logic belongs in a dedicated `src/` directory, while tests must reside in a parallel `tests/` directory. This separation prevents accidental coupling between test code and production code and ensures imports behave consistently across local development and CI environments.
+
+Each module should have a single, well-defined responsibility. Large files that exceed a few hundred lines often indicate that responsibilities are being mixed. When modules grow too large, functionality should be decomposed into smaller, purpose-driven files. For example, document loading, embedding logic, and retrieval logic should live in separate modules rather than a single monolithic file.
+
+Public interfaces should be explicit. Modules should expose only what is intended to be consumed by other parts of the system. Internal helper functions should be prefixed with an underscore where appropriate. Clear boundaries reduce unintended dependencies and make refactoring safer.
+
+Configuration values such as paths, environment-specific settings, and credentials must not be hardcoded. These values should be managed through environment variables or configuration files loaded at runtime. This practice improves security and enables consistent behavior across environments.
+
+Tests are a first-class concern and must be written alongside production code. Every core component should have corresponding unit tests that validate behavior, not implementation details. Integration tests should validate that components work together correctly without requiring external services unless explicitly intended.
+
+Documentation is part of structure. Every module should include a docstring explaining its purpose and high-level behavior. Complex functions should include comments that explain why decisions were made, not what the code is doing line by line.
+
+Adhering to these organizational standards ensures that Python projects remain understandable, testable, and adaptable as teams and requirements evolve.
