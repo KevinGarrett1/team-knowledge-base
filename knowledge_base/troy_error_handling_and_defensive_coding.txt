@@ -1,0 +1,106 @@
+Author: Troy Arris
+Date: 2026-01-08
+Topic: Python Code Organization and Structure
+Summary: Best practices error handling and defensive coding
+
+Troy's Error Handling and Defensive Coding Guidelines
+=====================================================
+
+Company Policy Document - Engineering Standards
+Last Updated: January 2026
+Author: Troy Martinez, Senior Software Engineer
+
+OVERVIEW
+--------
+This document outlines our team's standards for error handling and defensive coding practices. Following these guidelines ensures our applications are robust, maintainable, and provide excellent user experiences even when things go wrong.
+
+CORE PRINCIPLES
+---------------
+
+1. Fail Fast, Fail Gracefully
+   - Validate inputs at system boundaries immediately
+   - Never allow invalid data to propagate through the system
+   - Provide meaningful error messages to users and detailed logs for developers
+
+2. Never Trust External Data
+   - All user input is potentially malicious or malformed
+   - API responses from third parties may be incomplete or incorrectly formatted
+   - Database queries may return unexpected null values
+   - File system operations may fail due to permissions or missing files
+
+REQUIRED ERROR HANDLING PATTERNS
+--------------------------------
+
+Try-Except Blocks:
+- Always catch specific exceptions, never use bare except clauses
+- Log the full stack trace for debugging purposes
+- Re-raise exceptions when appropriate to preserve error context
+
+Example (Python):
+    try:
+        result = external_api.fetch_data(user_id)
+    except ConnectionError as e:
+        logger.error(f"API connection failed for user {user_id}: {e}")
+        raise ServiceUnavailableError("Unable to reach external service")
+    except ValidationError as e:
+        logger.warning(f"Invalid data received for user {user_id}: {e}")
+        return default_response()
+
+INPUT VALIDATION REQUIREMENTS
+-----------------------------
+
+1. Type Checking
+   - Verify data types before processing
+   - Use type hints in Python for documentation and static analysis
+   - Implement runtime type validation for critical paths
+
+2. Range and Format Validation
+   - Check numeric values are within acceptable ranges
+   - Validate string lengths and formats (emails, phone numbers, etc.)
+   - Sanitize all inputs before database operations
+
+3. Null/None Handling
+   - Always check for null values before accessing properties
+   - Use default values or early returns for missing data
+   - Document which functions accept null parameters
+
+LOGGING STANDARDS
+-----------------
+
+Log Levels:
+- ERROR: System failures requiring immediate attention
+- WARNING: Unexpected conditions that don't stop execution
+- INFO: Significant business events (user actions, transactions)
+- DEBUG: Detailed diagnostic information for troubleshooting
+
+Required Log Information:
+- Timestamp (UTC)
+- Request/correlation ID for tracing
+- User ID (if applicable, anonymized if sensitive)
+- Function/module name
+- Error message and stack trace for exceptions
+
+DEFENSIVE CODING CHECKLIST
+--------------------------
+
+Before submitting code for review, verify:
+[ ] All external inputs are validated
+[ ] Database queries use parameterized statements (no SQL injection)
+[ ] File paths are sanitized and validated
+[ ] API rate limits and timeouts are configured
+[ ] Sensitive data is not logged or exposed in error messages
+[ ] Resource cleanup occurs in finally blocks or context managers
+[ ] Edge cases are handled (empty lists, zero values, etc.)
+
+PROHIBITED PRACTICES
+--------------------
+
+- Swallowing exceptions without logging
+- Using generic error messages that hide root causes
+- Exposing stack traces or internal paths to end users
+- Hardcoding credentials or sensitive configuration
+- Ignoring return values from functions that indicate errors
+
+CONTACT
+-------
+Questions about these guidelines should be directed to the Engineering Standards Committee or your team lead.

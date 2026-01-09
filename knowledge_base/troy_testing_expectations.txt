@@ -1,0 +1,167 @@
+Author: Troy Arris
+Date: 2026-01-08
+Topic: Python Code Organization and Structure
+Summary: Best practices for testing and expectations
+
+Troy's Testing Expectations and Standards
+==========================================
+
+Company Policy Document - Quality Assurance Standards
+Last Updated: January 2026
+Author: Troy Martinez, Senior Software Engineer
+
+OVERVIEW
+--------
+Quality is everyone's responsibility. This document defines our team's expectations for testing practices. All code merged to main branches must meet these standards without exception.
+
+TESTING PHILOSOPHY
+------------------
+
+"If it's not tested, it's broken."
+
+We believe in:
+- Testing as a first-class development activity, not an afterthought
+- Automated tests that run on every commit
+- Fast feedback loops to catch issues early
+- Tests as living documentation of system behavior
+
+REQUIRED TEST COVERAGE
+----------------------
+
+Minimum Coverage Requirements:
+- New code: 80% line coverage minimum
+- Critical business logic: 95% coverage minimum
+- Bug fixes: Must include regression test proving the fix
+- API endpoints: 100% of public endpoints must have integration tests
+
+Coverage Exclusions (acceptable to skip):
+- Configuration files
+- Generated code
+- Third-party library wrappers (test integration, not the library)
+
+TEST TYPES AND WHEN TO USE THEM
+-------------------------------
+
+1. Unit Tests
+   - Test individual functions and methods in isolation
+   - Mock external dependencies (databases, APIs, file system)
+   - Should run in milliseconds
+   - Naming: test_<function_name>_<scenario>_<expected_result>
+
+2. Integration Tests
+   - Test component interactions (e.g., service + database)
+   - Use test databases or containers
+   - Acceptable to take seconds to run
+   - Required for all API endpoints and database operations
+
+3. End-to-End Tests
+   - Test complete user workflows
+   - Run against staging environment
+   - Required for critical user journeys (login, checkout, etc.)
+   - Limit quantity due to slower execution and maintenance cost
+
+TEST STRUCTURE REQUIREMENTS
+---------------------------
+
+All tests must follow the Arrange-Act-Assert (AAA) pattern:
+
+Example:
+    def test_calculate_discount_premium_user_receives_twenty_percent():
+        # Arrange
+        user = User(membership_level="premium")
+        cart = ShoppingCart(total=100.00)
+
+        # Act
+        discount = calculate_discount(user, cart)
+
+        # Assert
+        assert discount == 20.00
+
+NAMING CONVENTIONS
+------------------
+
+Test Files:
+- Python: test_<module_name>.py
+- JavaScript: <module_name>.test.js
+
+Test Functions/Methods:
+- Descriptive names that explain the scenario
+- Include expected outcome in the name
+- Example: test_login_with_invalid_password_returns_401_error
+
+TEST DATA MANAGEMENT
+--------------------
+
+1. Use factories or fixtures for test data creation
+2. Never use production data in tests
+3. Clean up test data after each test run
+4. Use meaningful test data that represents real scenarios
+5. Avoid magic numbers - use named constants
+
+CONTINUOUS INTEGRATION REQUIREMENTS
+-----------------------------------
+
+All pull requests must:
+- Pass all existing tests
+- Include new tests for new functionality
+- Not decrease overall code coverage
+- Pass linting and static analysis checks
+
+Tests are run automatically on:
+- Every push to feature branches
+- Pull request creation and updates
+- Merge to main branch
+- Nightly full regression suite
+
+PERFORMANCE TESTING EXPECTATIONS
+--------------------------------
+
+- Unit tests: < 100ms each
+- Integration tests: < 5 seconds each
+- Full test suite: < 10 minutes
+- Tests exceeding these limits require team lead approval
+
+MOCKING AND STUBBING GUIDELINES
+-------------------------------
+
+When to Mock:
+- External API calls
+- Database connections (for unit tests)
+- Time-dependent functions
+- Random number generators
+- File system operations
+
+When NOT to Mock:
+- The code under test
+- Simple data transformations
+- Internal helper functions (usually)
+
+FLAKY TEST POLICY
+-----------------
+
+Flaky tests (tests that sometimes pass, sometimes fail) are bugs:
+- Report flaky tests immediately
+- Flaky tests must be fixed within 48 hours or disabled
+- Disabled tests must have a tracking ticket
+- Repeat offenders require root cause analysis
+
+TEST REVIEW CHECKLIST
+---------------------
+
+Before approving a PR, verify tests:
+[ ] Cover the happy path
+[ ] Cover error cases and edge cases
+[ ] Have descriptive names
+[ ] Are independent (can run in any order)
+[ ] Don't rely on external services without mocking
+[ ] Clean up any created resources
+[ ] Are not duplicating existing tests
+
+RESOURCES
+---------
+
+- Testing framework documentation: internal wiki/testing
+- Example test patterns: repo/examples/tests
+- Questions: #engineering-testing Slack channel
+
+Remember: Good tests give us confidence to ship fast and refactor fearlessly.
